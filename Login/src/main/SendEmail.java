@@ -1,3 +1,4 @@
+package src.main;
 import java.util.Properties;
 import javax.mail.*;
 import javax.mail.internet.*;

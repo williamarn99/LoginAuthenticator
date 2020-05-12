@@ -1,3 +1,4 @@
+package src.main;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -14,18 +15,16 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 /**
- * The forgot panel button allows for the 
+ * 
  * 
  * @author William Arnold
  * @version 1.0
  * @since 2020-05-11
  */
-public class ForgotPanel implements ActionListener {
-	
-	private DatabaseManager dm;
-	private SendEmail se;
+public class CodePanel implements ActionListener {
 	
 	private String code;
+	private String email;
 	
 	private static FrameMain frame;
 	
@@ -33,43 +32,51 @@ public class ForgotPanel implements ActionListener {
 	private static JPanel panelButtons;
 	private JPanel panelBack;
 	
-	private static JLabel labEmail;
+	private static JLabel labInstruction;
+	private static JLabel labCode;
 	private static JLabel labError;
 	
-	private static JTextField fieldEmail;
+	private static JTextField fieldCode;
 	
 	private static JButton buttonCont;
 	private static JButton buttonBack;
 	
-	public ForgotPanel(FrameMain f, JPanel bp) {
+	public CodePanel(FrameMain f, JPanel bp, String c, String e) {
 		panelBack = bp;
 		frame = f;
 		
-		dm = DatabaseManager.getInstance();
-		se = SendEmail.getInstance();
+		code = c;
+		email = e;
 		
 		createDisplay(this);
 	}
 	
-	public static void createDisplay(ForgotPanel p) {
+	public static void createDisplay(CodePanel p) {
 		panelMain = new JPanel(new GridBagLayout());
 		
 		GridBagConstraints bag = new GridBagConstraints();
 		
-		labEmail = new JLabel("Email");
+		labInstruction = new JLabel("We sent a code to your email address");
 		bag.fill = GridBagConstraints.CENTER;
 		bag.insets = new Insets(10, 10, 0, 0);
 		bag.gridx = 0;
 		bag.gridy = 0;
-		panelMain.add(labEmail, bag);
+		panelMain.add(labInstruction, bag);
 		
-		fieldEmail = new JTextField();
-		fieldEmail.setPreferredSize(new Dimension(250, 20));
+		labCode = new JLabel("Code");
 		bag.fill = GridBagConstraints.CENTER;
 		bag.insets = new Insets(10, 10, 0, 0);
 		bag.gridx = 0;
 		bag.gridy = 1;
-		panelMain.add(fieldEmail, bag);
+		panelMain.add(labCode, bag);
+		
+		fieldCode = new JTextField();
+		fieldCode.setPreferredSize(new Dimension(250, 20));
+		bag.fill = GridBagConstraints.CENTER;
+		bag.insets = new Insets(10, 10, 0, 0);
+		bag.gridx = 0;
+		bag.gridy = 2;
+		panelMain.add(fieldCode, bag);
 		
 		buttonBack = new JButton("Back");
 		buttonBack.addActionListener(p);
@@ -82,16 +89,16 @@ public class ForgotPanel implements ActionListener {
 		bag.fill = GridBagConstraints.CENTER;
 		bag.insets = new Insets(10, 10, 0, 0);
 		bag.gridx = 0;
-		bag.gridy = 2;
+		bag.gridy = 3;
 		panelMain.add(panelButtons, bag);
 		
-		labError = new JLabel("Email address not recognized");
+		labError = new JLabel("Code is incorrect");
 		labError.setForeground(Color.red);
 		labError.setVisible(false);
 		bag.fill = GridBagConstraints.CENTER;
 		bag.insets = new Insets(10, 10, 0, 0);
 		bag.gridx = 0;
-		bag.gridy = 3;
+		bag.gridy = 4;
 		panelMain.add(labError, bag);
 		
 		frame.add(panelMain, BorderLayout.CENTER);
@@ -104,18 +111,16 @@ public class ForgotPanel implements ActionListener {
 			frame.createDisplay(frame);
 		}
 		else if(e.getSource() == buttonCont) {
-			String email = fieldEmail.getText();
+			String locCode = fieldCode.getText();
 			
-			if(!dm.emailExists(email)) {
+			if(!locCode.equals(code)) {
 				labError.setVisible(true);
 			}
 			else {
-				code = se.sendMessage();
-				
 				frame.remove(panelMain);
-				CodePanel codPanel = new CodePanel(frame, panelBack, code, email);
+				PasswordPanel passPanel = new PasswordPanel(frame, email);
 				frame.pack();
 			}
-		}
+		}		
 	}
 }

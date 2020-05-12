@@ -1,3 +1,4 @@
+package src.main;
 /**
  * Login Splash class represents the parent application that would load the login
  * page before entering into the application.
